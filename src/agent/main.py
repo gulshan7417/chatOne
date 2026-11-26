@@ -1,29 +1,36 @@
 from pydantic import ValidationError
 
+from agent.graph.builder import build_graph
 from agent.schemas import AgentRequest
 
 
-def create_agent_request(data: dict) -> AgentRequest:
-    """Validate raw input before it enters the agent workflow."""
-    return AgentRequest.model_validate(data)
-
-
 def main() -> None:
-    invalid_data = {
-        "user_id": "../admin",
+    raw_input = {
+        "user_id": "gulshan",
         "thread_id": "thread_001",
-        "message": "   ",
-        "is_admin": True,
+        "message": "What is LangGraph?",
     }
 
     try:
-        request = create_agent_request(invalid_data)
+        request = AgentRequest.model_validate(raw_input)
+        graph = build_graph()
 
-        print("Validation successful")
-        print(request.model_dump())
+        result = graph.invoke(
+            {
+                **request.model_dump(),
+                "normalized_message": "",
+                "request_type": "unclassified",
+                "response": "",
+            }
+        )
+
+        print("Graph execution successful")
+        print(f"Normalized message: {result['normalized_message']}")
+        print(f"Request type: {result['request_type']}")
+        print(f"Response: {result['response']}")
 
     except ValidationError as error:
-        print("Validation failed")
+        print("Input validation failed")
         print(error)
 
 

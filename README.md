@@ -35,3 +35,43 @@ Implemented:
 - Whitespace normalization
 - Assignment validation
 - Valid and invalid input checks
+## Step 4: Deterministic LangGraph workflow
+
+Implemented:
+
+- Pydantic-based graph state
+- Message-normalization node
+- Deterministic response node
+- START and END graph edges
+- Graph compilation and invocation
+- Automated graph execution tests
+- Invalid graph input tests
+
+Current workflow:
+
+```text
+START → normalize_message → create_response → END
+
+## Step 5: Conditional graph routing
+
+Implemented:
+
+- Deterministic request classification
+- Greeting, question, and unknown request types
+- LangGraph conditional edges
+- Dedicated response nodes for each route
+- Safe fallback routing
+- Unit tests for nodes and routing
+- Integration tests for every graph branch
+
+Current workflow:
+
+```text
+START
+  ↓
+normalize_message
+  ↓
+classify_request
+  ├── greeting → handle_greeting ─┐
+  ├── question → handle_question ├──→ END
+  └── unknown  → handle_unknown ──┘
